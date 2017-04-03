@@ -44,7 +44,7 @@ public class TransacoesController {
 	}
 
 	@RequestMapping(value = "adicionarPessoa", method = RequestMethod.POST)
-	public ModelAndView adicionarPessoa(PessoaModel pessoaModel) {
+	public String adicionarPessoa(PessoaModel pessoaModel) {
 		System.out.println(pessoaModel);
 		ContaModel contaModel = new ContaModel();
 		contaModel.setLimite(ContaRepository.LIMITE_PADRAO);
@@ -52,11 +52,11 @@ public class TransacoesController {
 		pessoaModel.setConta(contaModel);
 		pessoaModel.setDataCadastro(new Date());
 		pessoaRepository.save(pessoaModel);
-		return new ModelAndView(VIEW_HOME);
+		return "redirect:" + VIEW_HOME;
 	}
 
 	@RequestMapping(value = "realizarTransacao", method = RequestMethod.POST)
-	public ModelAndView realizarTransacao(@Valid TransacaoModel transacaoModel,
+	public String realizarTransacao(@Valid TransacaoModel transacaoModel,
 			BindingResult bindingResult) {
 		System.out.println(transacaoModel);
 		if (bindingResult.hasErrors()) {
@@ -64,7 +64,7 @@ public class TransacoesController {
 				System.out.println(e);
 			}
 		}
-		return new ModelAndView(VIEW_HOME);
+		return "redirect:" + VIEW_HOME;
 	}
 
 	@RequestMapping(value = "atualizarSaldo", method = RequestMethod.POST,
