@@ -35,7 +35,7 @@ public class TransacoesController {
 	@Autowired
 	private ContaRepository contaRepository;
 
-	@GetMapping("/*")
+	@GetMapping("/")
 	public ModelAndView home() {
 		ModelAndView modelAndView = new ModelAndView(VIEW_HOME);
 		modelAndView.addObject("tipos", TipoTransacao.values());
