@@ -27,7 +27,7 @@ import com.transacoes.repository.PessoaRepository;
 
 @Controller
 public class TransacoesController {
-	public static final String VIEW_HOME = "/index";
+	public static final String VIEW_HOME = "index";
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
