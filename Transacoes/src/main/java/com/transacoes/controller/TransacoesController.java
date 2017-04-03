@@ -44,7 +44,12 @@ public class TransacoesController {
 	}
 
 	@RequestMapping(value = "adicionarPessoa", method = RequestMethod.POST)
-	public String adicionarPessoa(PessoaModel pessoaModel) {
+	public String adicionarPessoa(@Valid PessoaModel pessoaModel,
+			BindingResult bindingResult) {
+		System.out.println(bindingResult);
+		if (bindingResult.hasErrors()) {
+			return "redirect:" + VIEW_HOME;
+		}
 		System.out.println(pessoaModel);
 		ContaModel contaModel = new ContaModel();
 		contaModel.setLimite(ContaRepository.LIMITE_PADRAO);
