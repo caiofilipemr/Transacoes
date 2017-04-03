@@ -1,6 +1,6 @@
 function mostrarContaDestino(value) {
 	console.log(value);
-	document.getElementById("dvContaDestino").style.display = ((value == 'TRANSFERENCIA') ? 'inline'
+	document.getElementById("dvContaDestino").style.display = ((value == 'TRANSFERENCIA') ? 'inherit'
 			: 'none');
 }
 
