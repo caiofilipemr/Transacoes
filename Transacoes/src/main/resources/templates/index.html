@@ -59,18 +59,18 @@
 		style="border-style: solid; border-width: 5px; border-radius: 3px; padding: 16px">
 		<h3>Realizar transação</h3>
 		<form action="realizarTransacao" method="post">
-			Conta: 
+			Conta:
 			<select id="conta" name="contaOrigem" onchange="atualizarSaldo(this.value)">
 				<option th:each="cliente : ${clientes}" th:text="${cliente.nome}" th:value="${cliente.conta.id}"></option>
-			</select> 
+			</select>
 			Saldo: <span id="saldo"></span>
-			Tipo: 
+			Tipo:
 			<select name="tipo" onchange="mostrarContaDestino(this.value)">
 				<option th:each="tipo : ${tipos}" th:text="${tipo.descricao}" th:value="${tipo}"></option>
-			</select><br /> 
+			</select><br />
 			Valor: <input name="valor" type="number" step="0.01" min="0"/>
 			<div id="dvContaDestino" style="display: none">
-				Conta destino: 
+				Conta destino:
 				<select id="contaDestino" name="contaDestino">
 					<option th:each="cliente : ${clientes}" th:text="${cliente.nome}" th:value="${cliente.conta.id}"></option>
 				</select>

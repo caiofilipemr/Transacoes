@@ -28,10 +28,10 @@ import com.transacoes.repository.PessoaRepository;
 @Controller
 public class TransacoesController {
 	public static final String VIEW_HOME = "index";
-	
+
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
+
 	@Autowired
 	private ContaRepository contaRepository;
 
@@ -42,7 +42,7 @@ public class TransacoesController {
 		modelAndView.addObject("clientes", pessoaRepository.findAll());
 		return modelAndView;
 	}
-	
+
 	@RequestMapping(value = "adicionarPessoa", method = RequestMethod.POST)
 	public String adicionarPessoa(PessoaModel pessoaModel) {
 		System.out.println(pessoaModel);
@@ -52,9 +52,9 @@ public class TransacoesController {
 		pessoaModel.setConta(contaModel);
 		pessoaModel.setDataCadastro(new Date());
 		pessoaRepository.save(pessoaModel);
-		return VIEW_HOME;
+		return new ModelAndView(VIEW_HOME);
 	}
-	
+
 	@RequestMapping(value = "realizarTransacao", method = RequestMethod.POST)
 	public String realizarTransacao(@Valid TransacaoModel transacaoModel,
 			BindingResult bindingResult) {
@@ -64,9 +64,9 @@ public class TransacoesController {
 				System.out.println(e);
 			}
 		}
-		return VIEW_HOME;
+		return new ModelAndView(VIEW_HOME);
 	}
-	
+
 	@RequestMapping(value = "atualizarSaldo", method = RequestMethod.POST,
 			headers = {"Content-type=application/x-www-form-urlencoded"})
 	@ResponseBody
