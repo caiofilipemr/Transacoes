@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 
 import com.transacoes.TipoTransacao;
 import com.transacoes.model.ContaModel;
