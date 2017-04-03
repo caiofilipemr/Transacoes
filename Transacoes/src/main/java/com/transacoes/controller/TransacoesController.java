@@ -44,7 +44,7 @@ public class TransacoesController {
 	}
 
 	@RequestMapping(value = "adicionarPessoa", method = RequestMethod.POST)
-	public String adicionarPessoa(PessoaModel pessoaModel) {
+	public ModelAndView adicionarPessoa(PessoaModel pessoaModel) {
 		System.out.println(pessoaModel);
 		ContaModel contaModel = new ContaModel();
 		contaModel.setLimite(ContaRepository.LIMITE_PADRAO);
@@ -56,7 +56,7 @@ public class TransacoesController {
 	}
 
 	@RequestMapping(value = "realizarTransacao", method = RequestMethod.POST)
-	public String realizarTransacao(@Valid TransacaoModel transacaoModel,
+	public ModelAndView realizarTransacao(@Valid TransacaoModel transacaoModel,
 			BindingResult bindingResult) {
 		System.out.println(transacaoModel);
 		if (bindingResult.hasErrors()) {
