@@ -1,21 +1,47 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Transações bancárias</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Transações bancárias</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<div style="border-style: solid; border-width: 5px; border-radius: 3px; padding: 16px">
-	    <h3>Cadastrar clientes</h3>
-	    <form action="adicionarPessoa">
-	    	Nome: <input name="nome"/>
-	    	CPF: <input name="cpf"/>
-	    	E-mail: <input name="email" type="email"/><br/>
-	    	Telefone: <input name="telefone" type="tel"/>
-	    	Endereço: <input name="endereco"/>
-	    	Data de nascimento: <input name="dataNascimento" type="date"/>
-	    	<input type="submit"/>
-	    </form>
+	<div
+		style="border-style: solid; border-width: 5px; border-radius: 3px; padding: 16px">
+		<h3>Cadastrar clientes</h3>
+		<form action="adicionarPessoa" method="post">
+			Nome: <input name="nome" /> CPF: <input name="cpf" /> E-mail: <input
+				name="email" type="email" /><br /> Telefone: <input
+				name="telefone" type="tel" /> Endereço: <input name="endereco" />
+			Data de nascimento: <input name="dataNascimento" type="date" /> <input
+				type="submit" />
+		</form>
 	</div>
+
+	<div
+		style="border-style: solid; border-width: 5px; border-radius: 3px; padding: 16px">
+		<h3>Realizar transação</h3>
+		<form action="realizarTransacao" method="post">
+			Conta: 
+			<select id="conta" name="contaOrigem" onchange="atualizarSaldo(this.value)">
+				<option th:each="cliente : ${clientes}" th:text="${cliente.nome}" th:value="${cliente.conta.id}"></option>
+			</select> 
+			Saldo: <span id="saldo"></span>
+			Tipo: 
+			<select name="tipo" onchange="mostrarContaDestino(this.value)">
+				<option th:each="tipo : ${tipos}" th:text="${tipo.descricao}" th:value="${tipo}"></option>
+			</select><br /> 
+			Valor: <input name="valor" type="number" step="0.01" min="0"/>
+			<div id="dvContaDestino" style="display: none">
+				Conta destino: 
+				<select id="contaDestino" name="contaDestino">
+					<option th:each="cliente : ${clientes}" th:text="${cliente.nome}" th:value="${cliente.conta.id}"></option>
+				</select>
+			</div>
+			<input type="submit" />
+		</form>
+	</div>
+
+	<script type="text/javascript" th:src="@{/js/index.js}"></script>
 </body>
 </html>
