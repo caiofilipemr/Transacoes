@@ -4,18 +4,25 @@
 <head>
 <title>Transações bancárias</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<div
-		style="border-style: solid; border-width: 5px; border-radius: 3px; padding: 16px">
-		<h3>Cadastrar clientes</h3>
-		<form action="adicionarPessoa" method="post">
-			Nome: <input name="nome" /> CPF: <input name="cpf" /> E-mail: <input
-				name="email" type="email" /><br /> Telefone: <input
-				name="telefone" type="tel" /> Endereço: <input name="endereco" />
-			Data de nascimento: <input name="dataNascimento" type="date" /> <input
-				type="submit" />
-		</form>
+	 <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Cadastrar clientes</h4>
+		</div>
+		<div class="panel-body">
+			<form action="adicionarPessoa" method="post">
+				Nome: <input name="nome" /> CPF: <input name="cpf" /> E-mail: <input
+					name="email" type="email" /><br /> Telefone: <input
+					name="telefone" type="tel" /> Endereço: <input name="endereco" />
+				Data de nascimento: <input name="dataNascimento" type="date" /> <input
+					type="submit" />
+			</form>
+		</div>
 	</div>
 
 	<div
