@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
 import com.transacoes.TipoTransacao;
 import com.transacoes.model.ContaModel;
@@ -34,6 +36,13 @@ public class TransacoesController {
 
 	@Autowired
 	private ContaRepository contaRepository;
+
+	@InitBinder
+	private void dateBinder(WebDataBinder binder) {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
+    binder.registerCustomEditor(Date.class, editor);
+	}
 
 	@GetMapping("/*")
 	public ModelAndView home() {
