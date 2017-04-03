@@ -43,7 +43,7 @@ public class TransacoesController {
 		return modelAndView;
 	}
 	
-	@RequestMapping("adicionarPessoa", method = RequestMethod.POST)
+	@RequestMapping(value = "adicionarPessoa", method = RequestMethod.POST)
 	public String adicionarPessoa(PessoaModel pessoaModel) {
 		System.out.println(pessoaModel);
 		ContaModel contaModel = new ContaModel();
@@ -55,7 +55,7 @@ public class TransacoesController {
 		return VIEW_HOME;
 	}
 	
-	@RequestMapping("realizarTransacao", method = RequestMethod.POST)
+	@RequestMapping(value = "realizarTransacao", method = RequestMethod.POST)
 	public String realizarTransacao(@Valid TransacaoModel transacaoModel,
 			BindingResult bindingResult) {
 		System.out.println(transacaoModel);
