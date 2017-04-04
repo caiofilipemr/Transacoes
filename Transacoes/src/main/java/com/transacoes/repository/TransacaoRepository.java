@@ -11,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TemporalType;
 
+import com.transacoes.TipoTransacao;
+
 import com.transacoes.model.TransacaoModel;
+import com.transacoes.model.ContaModel;
 
 @Repository
 @Transactional
