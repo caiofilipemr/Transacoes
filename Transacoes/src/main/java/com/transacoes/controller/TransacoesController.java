@@ -89,8 +89,7 @@ public class TransacoesController {
 		try {
 			salvarTransacao(transacaoModel);
 		} catch (SaldoInsuficienteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.toString());
 		}
 		return "redirect:" + VIEW_HOME;
 	}
@@ -131,13 +130,21 @@ public class TransacoesController {
 				transacaoModel.getContaOrigem().setSaldo(saldo);
 			} else if (TipoTransacao.SAQUE.equals(transacaoModel.getTipo())) {
 				transacaoModel.setTarifa(calcularTarifaSaque(transacaoModel));
+				saldo = transacaoModel.getContaOrigem().getSaldo();
+				saldo = saldo.subtract(transacaoModel.getValor().add(transacaoModel.getTarifa()));
+
+				if (saldo.compareTo(transacaoModel.getContaOrigem().getLimite()) < 0) { // Saldo insuficiente
+					throw new TransacaoRepository.SaldoInsuficienteException("Saldo insuficiente para realizar a transação!",
+							transacaoModel);
+				}
+
+				transacaoModel.getContaOrigem().setSaldo(saldo);
 			}
 		}
 		transacaoRepository.save(transacaoModel);
 	}
 
 	private BigDecimal calcularTarifaSaque(TransacaoModel transacaoModel) {
-		System.out.println("Calculando a tarfica do saque!");
 		Date data = transacaoModel.getData();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(data);
@@ -148,7 +155,6 @@ public class TransacoesController {
 		System.out.println("Inicio: " + inicio + " - Fim: " + fim);
 
 		List<TransacaoModel> lista = transacaoRepository.findByDataBetween(inicio, fim);
-		System.out.println(lista);
 		return lista.size() > 3 ? TransacaoRepository.TARIFA_SAQUE : BigDecimal.ZERO;
 	}
 }
