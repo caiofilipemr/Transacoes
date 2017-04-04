@@ -55,7 +55,10 @@ public class TransacoesController {
 	public ModelAndView home() {
 		ModelAndView modelAndView = new ModelAndView(VIEW_HOME);
 		modelAndView.addObject("tipos", TipoTransacao.values());
-		modelAndView.addObject("clientes", pessoaRepository.findAll());
+		List<PessoaModel> listaPessoa = pessoaRepository.findAll();
+		modelAndView.addObject("clientes", listaPessoa);
+		modelAndView.addObject("saldo", listaPessoa.isEmpty() ? "0"
+				: DecimalFormat.getInstance().format(listaPessoa.get(i).getConta().getSaldo()));
 		return modelAndView;
 	}
 
@@ -154,7 +157,8 @@ public class TransacoesController {
 		Date fim = calendar.getTime();
 		System.out.println("Inicio: " + inicio + " - Fim: " + fim);
 
-		List<TransacaoModel> lista = transacaoRepository.findByDataBetween(inicio, fim);
+		List<TransacaoModel> lista = transacaoRepository.findByDataBetween(inicio,
+				fim, TipoTransacao.SAQUE, transacaoModel.getContaOrigem());
 		return lista.size() > 3 ? TransacaoRepository.TARIFA_SAQUE : BigDecimal.ZERO;
 	}
 }
