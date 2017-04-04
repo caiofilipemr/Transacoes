@@ -3,12 +3,14 @@ package com.transacoes.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -20,14 +22,15 @@ public class TransacaoModel {
 	@GeneratedValue
 	private Long id;
 	private BigDecimal valor;
+	private BigDecimal tarifa;
 	
 	@Enumerated(EnumType.STRING)
 	private TipoTransacao tipo;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private ContaModel contaOrigem;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private ContaModel contaDestino;
 	
 	@Temporal(TemporalType.DATE)
@@ -47,6 +50,14 @@ public class TransacaoModel {
 
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
+	}
+
+	public BigDecimal getTarifa() {
+		return tarifa;
+	}
+
+	public void setTarifa(BigDecimal tarifa) {
+		this.tarifa = tarifa;
 	}
 	
 	public TipoTransacao getTipo() {
@@ -83,8 +94,8 @@ public class TransacaoModel {
 
 	@Override
 	public String toString() {
-		return "TransacaoModel [id=" + id + ", valor=" + valor + ", tipo=" + tipo 
-				+ ", contaOrigem=" + contaOrigem + ", contaDestino="
-				+ contaDestino + ", data=" + data + "]";
+		return "TransacaoModel [id=" + id + ", valor=" + valor + ", tarifa=" + tarifa
+				+ ", tipo=" + tipo + ", contaOrigem=" + contaOrigem 
+				+ ", contaDestino=" + contaDestino + ", data=" + data + "]";
 	}
 }
