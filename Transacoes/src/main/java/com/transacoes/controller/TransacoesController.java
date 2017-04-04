@@ -40,7 +40,7 @@ public class TransacoesController {
 
 	@Autowired
 	private ContaRepository contaRepository;
-	
+
 	@Autowired
 	private TransacaoRepository transacaoRepository;
 
@@ -85,7 +85,7 @@ public class TransacoesController {
 				System.out.println(e);
 			}
 		}
-		
+
 		try {
 			salvarTransacao(transacaoModel);
 		} catch (SaldoInsuficienteException e) {
@@ -102,20 +102,20 @@ public class TransacoesController {
 		contaModel = contaRepository.findOne(contaModel.getId());
 		return DecimalFormat.getInstance().format(contaModel.getSaldo());
 	}
-	
+
 	private void salvarTransacao(TransacaoModel transacaoModel) throws SaldoInsuficienteException {
 		if (transacaoModel.getData() == null) {
 			transacaoModel.setData(new Date());
 		}
-		
+
 		BigDecimal saldo;
 		if (TipoTransacao.TRANSFERENCIA.equals(transacaoModel.getTipo())) { // É uma transferência
 			transacaoModel.setTarifa(TransacaoRepository.TARIFA_TRANSF);
 			saldo = transacaoModel.getContaOrigem().getSaldo();
 			saldo = saldo.subtract(transacaoModel.getValor()).subtract(transacaoModel.getTarifa());
-			
+
 			if (saldo.compareTo(transacaoModel.getContaOrigem().getLimite()) < 0) { // Saldo insuficiente
-				throw new TransacaoRepository.SaldoInsuficienteException("Saldo insuficiente para realizar a transação!", 
+				throw new TransacaoRepository.SaldoInsuficienteException("Saldo insuficiente para realizar a transação!",
 						transacaoModel);
 			}
 			transacaoModel.getContaOrigem().setSaldo(saldo);
@@ -137,6 +137,7 @@ public class TransacoesController {
 	}
 
 	private BigDecimal calcularTarifaSaque(TransacaoModel transacaoModel) {
+		System.out.println("Calculando a tarfica do saque!");
 		Date data = transacaoModel.getData();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(data);
@@ -144,8 +145,10 @@ public class TransacoesController {
 		Date inicio = calendar.getTime();
 		calendar.set(Calendar.DAY_OF_MONTH, calendar.getMaximum(Calendar.DAY_OF_MONTH));
 		Date fim = calendar.getTime();
-		
+		System.out.println("Inicio: " + inicio + " - Fim: " + fim);
+
 		List<TransacaoModel> lista = transacaoRepository.findByDataBetween(inicio, fim);
+		System.out.println(lista);
 		return lista.size() > 3 ? TransacaoRepository.TARIFA_SAQUE : BigDecimal.ZERO;
 	}
 }
