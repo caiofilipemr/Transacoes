@@ -61,6 +61,7 @@ public class TransacoesController {
 
 	@GetMapping("/*")
 	public ModelAndView home() {
+		ModelAndView modelAndView = getObjetosView();
 		modelAndView.addObject("pessoaModel", new PessoaModel());
 		return modelAndView;
 	}
@@ -70,6 +71,7 @@ public class TransacoesController {
 			BindingResult bindingResult) {
 		System.out.println(bindingResult);
 		if (bindingResult.hasErrors()) {
+			ModelAndView modelAndView = getObjetosView();
 			modelAndView.addObject("pessoaModel", pessoaModel);
 			return VIEW_HOME;
 		}
