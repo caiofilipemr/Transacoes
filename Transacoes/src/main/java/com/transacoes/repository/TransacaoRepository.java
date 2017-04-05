@@ -19,28 +19,6 @@ import com.transacoes.model.ContaModel;
 @Repository
 @Transactional
 public interface TransacaoRepository extends CrudRepository<TransacaoModel, Long> {
-	public static final BigDecimal TARIFA_TRANSF = new BigDecimal(1.75);
-	public static final BigDecimal TARIFA_SAQUE = new BigDecimal(3.9);
-
-	List<TransacaoModel> findByDataBetweenAndTipoAndConta(@Temporal(TemporalType.DATE) Date inicio,
-			@Temporal(TemporalType.DATE) Date fim, TipoTransacao tipo, ContaModel contaModel);
-
-	public class SaldoInsuficienteException extends Exception {
-		private static final long serialVersionUID = 1L;
-		private final TransacaoModel transacaoModel;
-
-		public SaldoInsuficienteException(String msg) {
-			super(msg);
-			this.transacaoModel = null;
-		}
-
-		public SaldoInsuficienteException(String msg, TransacaoModel transacaoModel) {
-			super(msg);
-			this.transacaoModel = transacaoModel;
-		}
-
-		public TransacaoModel getTransacaoModel() {
-			return transacaoModel;
-		}
-	}
+	List<TransacaoModel> findByDataBetweenAndTipoAndContaOrigem(@Temporal(TemporalType.DATE) Date inicio,
+			@Temporal(TemporalType.DATE) Date fim, TipoTransacao tipo, ContaModel contaOrigem);
 }

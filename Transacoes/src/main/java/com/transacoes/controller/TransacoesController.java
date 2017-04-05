@@ -1,10 +1,7 @@
 package com.transacoes.controller;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.text.SimpleDateFormat;
 
 import javax.validation.Valid;
@@ -26,23 +23,23 @@ import com.transacoes.TipoTransacao;
 import com.transacoes.model.ContaModel;
 import com.transacoes.model.PessoaModel;
 import com.transacoes.model.TransacaoModel;
-import com.transacoes.repository.ContaRepository;
-import com.transacoes.repository.PessoaRepository;
-import com.transacoes.repository.TransacaoRepository;
-import com.transacoes.repository.TransacaoRepository.SaldoInsuficienteException;
+import com.transacoes.service.TransacaoService.SaldoInsuficienteException;
+import com.transacoes.service.ContaService;
+import com.transacoes.service.PessoaService;
+import com.transacoes.service.TransacaoService;
 
 @Controller
 public class TransacoesController {
 	public static final String VIEW_HOME = "index";
 
 	@Autowired
-	private PessoaRepository pessoaRepository;
+	private PessoaService pessoaService;
 
 	@Autowired
-	private ContaRepository contaRepository;
+	private ContaService contaService;
 
 	@Autowired
-	private TransacaoRepository transacaoRepository;
+	private TransacaoService transacaoService;
 
 	@InitBinder
 	private void dateBinder(WebDataBinder binder) {
@@ -55,10 +52,11 @@ public class TransacoesController {
 	public ModelAndView home() {
 		ModelAndView modelAndView = new ModelAndView(VIEW_HOME);
 		modelAndView.addObject("tipos", TipoTransacao.values());
-		List<PessoaModel> listaPessoa = pessoaRepository.findAll();
-		modelAndView.addObject("clientes", listaPessoa);
-		modelAndView.addObject("saldo", listaPessoa.isEmpty() ? "0"
-				: DecimalFormat.getInstance().format(listaPessoa.get(i).getConta().getSaldo()));
+		Iterable<PessoaModel> pessoas = pessoaService.encontrarTodos();
+		modelAndView.addObject("clientes", pessoas);
+		modelAndView.addObject("saldo", pessoas.iterator().hasNext() 
+				? DecimalFormat.getInstance().format(pessoas.iterator().next().getConta().getSaldo())
+				: "0");
 		return modelAndView;
 	}
 
@@ -70,12 +68,8 @@ public class TransacoesController {
 			return "redirect:" + VIEW_HOME;
 		}
 		System.out.println(pessoaModel);
-		ContaModel contaModel = new ContaModel();
-		contaModel.setLimite(ContaRepository.LIMITE_PADRAO);
-		contaModel.setSaldo(BigDecimal.ZERO);
-		pessoaModel.setConta(contaModel);
-		pessoaModel.setDataCadastro(new Date());
-		pessoaRepository.save(pessoaModel);
+		
+		pessoaService.incluir(pessoaModel);
 		return "redirect:" + VIEW_HOME;
 	}
 
@@ -90,7 +84,7 @@ public class TransacoesController {
 		}
 
 		try {
-			salvarTransacao(transacaoModel);
+			transacaoService.realizarTransacao(transacaoModel);
 		} catch (SaldoInsuficienteException e) {
 			System.out.println(e.toString());
 		}
@@ -101,64 +95,7 @@ public class TransacoesController {
 			headers = {"Content-type=application/x-www-form-urlencoded"})
 	@ResponseBody
 	public String atualizarSaldo(ContaModel contaModel) {
-		contaModel = contaRepository.findOne(contaModel.getId());
+		contaModel = contaService.consultar(contaModel.getId());
 		return DecimalFormat.getInstance().format(contaModel.getSaldo());
-	}
-
-	private void salvarTransacao(TransacaoModel transacaoModel) throws SaldoInsuficienteException {
-		if (transacaoModel.getData() == null) {
-			transacaoModel.setData(new Date());
-		}
-
-		BigDecimal saldo;
-		if (TipoTransacao.TRANSFERENCIA.equals(transacaoModel.getTipo())) { // É uma transferência
-			transacaoModel.setTarifa(TransacaoRepository.TARIFA_TRANSF);
-			saldo = transacaoModel.getContaOrigem().getSaldo();
-			saldo = saldo.subtract(transacaoModel.getValor()).subtract(transacaoModel.getTarifa());
-
-			if (saldo.compareTo(transacaoModel.getContaOrigem().getLimite()) < 0) { // Saldo insuficiente
-				throw new TransacaoRepository.SaldoInsuficienteException("Saldo insuficiente para realizar a transação!",
-						transacaoModel);
-			}
-			transacaoModel.getContaOrigem().setSaldo(saldo);
-			saldo = transacaoModel.getContaDestino().getSaldo();
-			saldo = saldo.add(transacaoModel.getValor());
-			transacaoModel.getContaDestino().setSaldo(saldo);
-		} else {
-			transacaoModel.setContaDestino(null);
-			if (TipoTransacao.DEPOSITO.equals(transacaoModel.getTipo())) {
-				transacaoModel.setTarifa(BigDecimal.ZERO);
-				saldo = transacaoModel.getContaOrigem().getSaldo();
-				saldo = saldo.add(transacaoModel.getValor());
-				transacaoModel.getContaOrigem().setSaldo(saldo);
-			} else if (TipoTransacao.SAQUE.equals(transacaoModel.getTipo())) {
-				transacaoModel.setTarifa(calcularTarifaSaque(transacaoModel));
-				saldo = transacaoModel.getContaOrigem().getSaldo();
-				saldo = saldo.subtract(transacaoModel.getValor().add(transacaoModel.getTarifa()));
-
-				if (saldo.compareTo(transacaoModel.getContaOrigem().getLimite()) < 0) { // Saldo insuficiente
-					throw new TransacaoRepository.SaldoInsuficienteException("Saldo insuficiente para realizar a transação!",
-							transacaoModel);
-				}
-
-				transacaoModel.getContaOrigem().setSaldo(saldo);
-			}
-		}
-		transacaoRepository.save(transacaoModel);
-	}
-
-	private BigDecimal calcularTarifaSaque(TransacaoModel transacaoModel) {
-		Date data = transacaoModel.getData();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(data);
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		Date inicio = calendar.getTime();
-		calendar.set(Calendar.DAY_OF_MONTH, calendar.getMaximum(Calendar.DAY_OF_MONTH));
-		Date fim = calendar.getTime();
-		System.out.println("Inicio: " + inicio + " - Fim: " + fim);
-
-		List<TransacaoModel> lista = transacaoRepository.findByDataBetween(inicio,
-				fim, TipoTransacao.SAQUE, transacaoModel.getContaOrigem());
-		return lista.size() > 3 ? TransacaoRepository.TARIFA_SAQUE : BigDecimal.ZERO;
 	}
 }

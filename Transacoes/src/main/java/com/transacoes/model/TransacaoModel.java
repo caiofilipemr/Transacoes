@@ -4,15 +4,16 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
 
 import com.transacoes.TipoTransacao;
 
@@ -21,7 +22,13 @@ public class TransacaoModel {
 	@Id
 	@GeneratedValue
 	private Long id;
+	
+	@Column(precision=15, scale=2)
+	@Digits(integer=15, fraction=2)
 	private BigDecimal valor;
+	
+	@Column(precision=15, scale=2)
+	@Digits(integer=15, fraction=2)
 	private BigDecimal tarifa;
 	
 	@Enumerated(EnumType.STRING)
