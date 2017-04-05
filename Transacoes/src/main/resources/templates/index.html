@@ -18,7 +18,7 @@
 			<form th:action="@{/adicionarPessoa}" th:object="${pessoaModel}" method="post">
 				<div class="form-group row">
 					<label for="nome" class="col-sm-2 col-form-label">Nome</label>
-					<div class="col-sm-4" th:classappend="${#fields.hasErrors('nome')} ? has-error has-feedback">
+					<div class="col-sm-4" th:classappend="${#fields.hasErrors('nome')} ? 'has-error has-feedback'">
 						<input id="nome" th:field="*{nome}" class="form-control"/>
 						<span th:if="${#fields.hasErrors('nome')}" class="glyphicon glyphicon-remove form-control-feedback"></span>
 					</div>
