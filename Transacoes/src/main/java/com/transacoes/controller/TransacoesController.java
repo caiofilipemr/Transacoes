@@ -48,8 +48,7 @@ public class TransacoesController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 
-	@GetMapping("/*")
-	public ModelAndView home() {
+	private getObjetosView() {
 		ModelAndView modelAndView = new ModelAndView(VIEW_HOME);
 		modelAndView.addObject("tipos", TipoTransacao.values());
 		Iterable<PessoaModel> pessoas = pessoaService.encontrarTodos();
@@ -57,6 +56,11 @@ public class TransacoesController {
 		modelAndView.addObject("saldo", pessoas.iterator().hasNext()
 				? DecimalFormat.getInstance().format(pessoas.iterator().next().getConta().getSaldo())
 				: "0");
+		return modelAndView;
+	}
+
+	@GetMapping("/*")
+	public ModelAndView home() {
 		modelAndView.addObject("pessoaModel", new PessoaModel());
 		return modelAndView;
 	}
@@ -66,6 +70,7 @@ public class TransacoesController {
 			BindingResult bindingResult) {
 		System.out.println(bindingResult);
 		if (bindingResult.hasErrors()) {
+			modelAndView.addObject("pessoaModel", pessoaModel);
 			return VIEW_HOME;
 		}
 		System.out.println(pessoaModel);
