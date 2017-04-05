@@ -57,6 +57,7 @@ public class TransacoesController {
 		modelAndView.addObject("saldo", pessoas.iterator().hasNext()
 				? DecimalFormat.getInstance().format(pessoas.iterator().next().getConta().getSaldo())
 				: "0");
+		modelAndView.addObject("pessoaModel", new PessoaModel());
 		return modelAndView;
 	}
 
