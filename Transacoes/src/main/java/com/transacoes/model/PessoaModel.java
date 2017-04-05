@@ -10,46 +10,52 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 @Entity
 public class PessoaModel {
 	@Id
 	@GeneratedValue
 	private Long id;
+
+	@NotNull
+	@Size(min = 2, max = 100)
 	private String nome;
 	private String cpf;
 	private String email;
 	private String telefone;
 	private String endereco;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataCadastro;
-	
+
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
-	
+
 	@OneToOne(cascade = {CascadeType.ALL})
 	private ContaModel conta;
-	
+
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getNome() {
 		return nome;
 	}
-	
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public String getCpf() {
 		return cpf;
 	}
-	
+
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
@@ -61,7 +67,7 @@ public class PessoaModel {
 	public void setConta(ContaModel conta) {
 		this.conta = conta;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}

@@ -54,7 +54,7 @@ public class TransacoesController {
 		modelAndView.addObject("tipos", TipoTransacao.values());
 		Iterable<PessoaModel> pessoas = pessoaService.encontrarTodos();
 		modelAndView.addObject("clientes", pessoas);
-		modelAndView.addObject("saldo", pessoas.iterator().hasNext() 
+		modelAndView.addObject("saldo", pessoas.iterator().hasNext()
 				? DecimalFormat.getInstance().format(pessoas.iterator().next().getConta().getSaldo())
 				: "0");
 		return modelAndView;
@@ -65,10 +65,10 @@ public class TransacoesController {
 			BindingResult bindingResult) {
 		System.out.println(bindingResult);
 		if (bindingResult.hasErrors()) {
-			return "redirect:" + VIEW_HOME;
+			return VIEW_HOME;
 		}
 		System.out.println(pessoaModel);
-		
+
 		pessoaService.incluir(pessoaModel);
 		return "redirect:" + VIEW_HOME;
 	}
@@ -78,9 +78,7 @@ public class TransacoesController {
 			BindingResult bindingResult) {
 		System.out.println(transacaoModel);
 		if (bindingResult.hasErrors()) {
-			for (ObjectError e : bindingResult.getAllErrors()) {
-				System.out.println(e);
-			}
+			return VIEW_HOME;
 		}
 
 		try {
