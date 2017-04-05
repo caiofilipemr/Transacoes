@@ -15,7 +15,7 @@
           <h4>Cadastrar clientes</h4>
 		</div>
 		<div class="panel-body">
-			<form th:action="@{/adicionarPessoa}" method="post">
+			<form th:action="@{/adicionarPessoa}" th:object="${pessoaModel}" method="post">
 				<div class="form-group row">
 					<label for="nome" class="col-sm-2 col-form-label">Nome</label>
 					<div class="col-sm-4">
