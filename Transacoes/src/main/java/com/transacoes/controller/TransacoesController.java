@@ -48,7 +48,7 @@ public class TransacoesController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 
-	private getObjetosView() {
+	private ModelAndView getObjetosView() {
 		ModelAndView modelAndView = new ModelAndView(VIEW_HOME);
 		modelAndView.addObject("tipos", TipoTransacao.values());
 		Iterable<PessoaModel> pessoas = pessoaService.encontrarTodos();
@@ -67,18 +67,18 @@ public class TransacoesController {
 	}
 
 	@RequestMapping(value = "adicionarPessoa", method = RequestMethod.POST)
-	public String adicionarPessoa(@Valid PessoaModel pessoaModel,
+	public ModelAndView adicionarPessoa(@Valid PessoaModel pessoaModel,
 			BindingResult bindingResult) {
 		System.out.println(bindingResult);
 		if (bindingResult.hasErrors()) {
 			ModelAndView modelAndView = getObjetosView();
 			modelAndView.addObject("pessoaModel", pessoaModel);
-			return VIEW_HOME;
+			return modelAndView;
 		}
 		System.out.println(pessoaModel);
 
 		pessoaService.incluir(pessoaModel);
-		return "redirect:" + VIEW_HOME;
+		return new ModelAndView("redirect:" + VIEW_HOME);
 	}
 
 	@RequestMapping(value = "realizarTransacao", method = RequestMethod.POST)
