@@ -16,11 +16,10 @@
 		</div>
 		<div class="panel-body">
 			<form th:action="@{/adicionarPessoa}" th:object="${pessoaModel}" method="post">
-				<div class="form-group row">
+				<div class="form-group row" th:classappend="${#fields.hasErrors('nome')} ? has-error">
 					<label for="nome" class="col-sm-2 col-form-label">Nome</label>
 					<div class="col-sm-4">
-						<input id="nome" th:field="*{nome}" class="form-control"
-								th:errorclass="has-error"/>
+						<input id="nome" th:field="*{nome}" class="form-control"/>
 					</div>
 					<label for="cpf" class="col-sm-2 col-form-label">CPF</label>
 					<div class="col-sm-4">
