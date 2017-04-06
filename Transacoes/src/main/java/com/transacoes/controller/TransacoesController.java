@@ -91,6 +91,18 @@ public class TransacoesController {
 			return modelAndView;
 		}
 
+		if (transacaoModel.getContaOrigem() == null) {
+			ModelAndView modelAndView = getObjetosView();
+			modelAndView.addObject("transacaoModel", transacaoModel);
+			modelAndView.addObject("saldoInsuficiente", "É necessário selecionar a conta de origem");
+			return modelAndView;
+		} else if (transacaoModel.getTipo() == null) {
+			ModelAndView modelAndView = getObjetosView();
+			modelAndView.addObject("transacaoModel", transacaoModel);
+			modelAndView.addObject("saldoInsuficiente", "É necessário selecionar o tipo");
+			return modelAndView;
+		}
+
 		try {
 			transacaoService.realizarTransacao(transacaoModel);
 		} catch (SaldoInsuficienteException e) {
