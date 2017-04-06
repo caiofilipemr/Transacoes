@@ -1,3 +1,15 @@
+$(function() {
+	$("#dataNascimento").datepicker({
+		dateFormat: "dd/mm/yy"
+	});
+});
+
+$(function() {
+	$("#data").datepicker({
+		dateFormat: "dd/mm/yy"
+	});
+});
+
 function mostrarContaDestino(value) {
 	console.log(value);
 	document.getElementById("dvContaDestino").style.display = ((value == 'TRANSFERENCIA') ? 'inherit'

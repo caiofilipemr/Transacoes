@@ -6,8 +6,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"></link>
+<link rel="stylesheet" href="/resources/demos/style.css"></link>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
 	 <div class="panel panel-default" style="max-width: 700px; margin: 16px auto;">
@@ -18,10 +22,9 @@
 			<form th:action="@{/adicionarPessoa}" th:object="${pessoaModel}" method="post">
 				<div class="form-group row">
 					<label for="nome" class="col-sm-2 col-form-label">Nome*</label>
-					<div class="col-sm-4" th:classappend="${#fields.hasErrors('nome')} ? 'has-error has-feedback'">
-						<input id="nome" th:field="*{nome}" class="form-control"/>
-						<span th:if="${#fields.hasErrors('nome')}" style="margin-right: 15px"
-							class="glyphicon glyphicon-remove form-control-feedback"></span>
+					<div class="col-sm-4">
+						<input id="nome" name="nome" class="form-control" required="required"
+							pattern=".{2,}" title="Campo obrigatório. Mínimo dois caracteres"/>
 					</div>
 					<label for="cpf" class="col-sm-2 col-form-label">CPF</label>
 					<div class="col-sm-4">
@@ -46,7 +49,8 @@
 					<label for="dataNascimento" class="col-sm-2 col-form-label">Data de nascimento</label>
 					<div class="col-sm-4">
 						<input id="dataNascimento" name="dataNascimento"
-							class="form-control" placeholder="DD/MM/YYYY"/>
+							class="form-control" placeholder="DD/MM/YYYY" 
+							readonly="readonly"/>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -97,19 +101,24 @@
 			 <div class="form-group row">
 				 <label for="valor" class="col-sm-2 col-form-label">Valor*</label>
 				 <div class="col-sm-4">
-					 <input name="valor" type="number" step="0.01" min="0"
-					 		class="form-control"/>
+					 <input id ="valor" name="valor" type="number" step="0.01" min="0"
+					 		class="form-control" required="required"
+					 		pattern="\d+(,\d{2})?"
+					 		title="Apenas números são aceitos. Casa decimal deve ser separa com vírgula. Ex: 1953,25"/>
 				 </div>
 				 <label for="data" class="col-sm-2 col-form-label">Data</label>
 				 <div class="col-sm-4">
 					 <input id="data" name="data" class="form-control"
-					 	placeholder="DD/MM/YYYY"/>
+					 	placeholder="DD/MM/YYYY" readonly="readonly"/>
 				 </div>
 			 </div>
 
 			 <div class="form-group row">
-				 <div class="offset-sm-10 col-sm-2">
-				 <button type="submit" class="btn btn-primary">Realizar transação</button>
+				 <div class="col-sm-4">
+				 	<button type="submit" class="btn btn-primary">Realizar transação</button>
+				 </div>
+				 <div class="col-sm-8">
+				 	<p style="color: red;" th:if="${saldoInsuficiente} != null" th:text="${saldoInsuficiente}"></p>
 				 </div>
 			 </div>
 		 </form>

@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,13 +48,14 @@ public class TransacoesController {
 	}
 
 	private ModelAndView getObjetosView() {
+		DecimalFormat dm = new DecimalFormat("#,##0.00");
 		ModelAndView modelAndView = new ModelAndView(VIEW_HOME);
 		modelAndView.addObject("tipos", TipoTransacao.values());
 		Iterable<PessoaModel> pessoas = pessoaService.encontrarTodos();
 		modelAndView.addObject("clientes", pessoas);
 		modelAndView.addObject("saldo", pessoas.iterator().hasNext()
-				? DecimalFormat.getInstance().format(pessoas.iterator().next().getConta().getSaldo())
-				: "0");
+				? dm.format(pessoas.iterator().next().getConta().getSaldo())
+				: "0,00");
 		return modelAndView;
 	}
 
@@ -82,19 +82,25 @@ public class TransacoesController {
 	}
 
 	@RequestMapping(value = "realizarTransacao", method = RequestMethod.POST)
-	public String realizarTransacao(@Valid TransacaoModel transacaoModel,
+	public ModelAndView realizarTransacao(@Valid TransacaoModel transacaoModel,
 			BindingResult bindingResult) {
 		System.out.println(transacaoModel);
 		if (bindingResult.hasErrors()) {
-			return VIEW_HOME;
+			ModelAndView modelAndView = getObjetosView();
+			modelAndView.addObject("transacaoModel", transacaoModel);
+			return modelAndView;
 		}
 
 		try {
 			transacaoService.realizarTransacao(transacaoModel);
 		} catch (SaldoInsuficienteException e) {
 			System.out.println(e.toString());
+			ModelAndView modelAndView = getObjetosView();
+			modelAndView.addObject("transacaoModel", transacaoModel);
+			modelAndView.addObject("saldoInsuficiente", e.getMessage());
+			return modelAndView;
 		}
-		return "redirect:" + VIEW_HOME;
+		return new ModelAndView("redirect:" + VIEW_HOME);
 	}
 
 	@RequestMapping(value = "atualizarSaldo", method = RequestMethod.POST,
@@ -102,6 +108,7 @@ public class TransacoesController {
 	@ResponseBody
 	public String atualizarSaldo(ContaModel contaModel) {
 		contaModel = contaService.consultar(contaModel.getId());
-		return DecimalFormat.getInstance().format(contaModel.getSaldo());
+		DecimalFormat dm = new DecimalFormat("#,##0.00");
+		return dm.format(contaModel.getSaldo());
 	}
 }

@@ -14,8 +14,8 @@ import com.transacoes.repository.TransacaoRepository;
 
 @Service
 public class TransacaoService {
-	public static final BigDecimal TARIFA_TRANSF = new BigDecimal(1.75);
-	public static final BigDecimal TARIFA_SAQUE = new BigDecimal(3.9);
+	public static final BigDecimal TARIFA_TRANSF = new BigDecimal("1.75");
+	public static final BigDecimal TARIFA_SAQUE = new BigDecimal("3.9");
 	
 	@Autowired
 	private TransacaoRepository transacaoRepository;
